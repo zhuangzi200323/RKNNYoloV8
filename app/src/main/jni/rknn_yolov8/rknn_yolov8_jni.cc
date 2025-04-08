@@ -30,7 +30,7 @@ JNIEXPORT void JNI_OnUnload(JavaVM *vm, void *reserved) {
 }
 
 JNIEXPORT jboolean JNICALL
-Java_com_sq_rknn_yolov8_YoloV8Detect_init(JNIEnv *env, jobject thiz, jstring jmodel_path,
+Java_com_sq_rknn_rknnyolov8_YoloV8Detect_init(JNIEnv *env, jobject thiz, jstring jmodel_path,
                                                 jstring jlabel_list_path, jboolean juse_zero_copy) {
     int ret;
     const char *modelPath = (env->GetStringUTFChars(jmodel_path, 0));
@@ -53,7 +53,7 @@ Java_com_sq_rknn_yolov8_YoloV8Detect_init(JNIEnv *env, jobject thiz, jstring jmo
 }
 
 JNIEXPORT jboolean JNICALL
-Java_com_sq_rknn_yolov8_YoloV8Detect_detect(JNIEnv *env, jobject thiz, jobject jbitmap) {
+Java_com_sq_rknn_rknnyolov8_YoloV8Detect_detect(JNIEnv *env, jobject thiz, jobject jbitmap) {
     AndroidBitmapInfo dstInfo;
 
     if (ANDROID_BITMAP_RESULT_SUCCESS != AndroidBitmap_getInfo(env, jbitmap, &dstInfo)) {
@@ -127,7 +127,7 @@ Java_com_sq_rknn_yolov8_YoloV8Detect_detect(JNIEnv *env, jobject thiz, jobject j
 }
 
 JNIEXPORT jobject JNICALL
-Java_com_sq_rknn_yolov8_YoloV8Detect_detect2(JNIEnv *env, jobject thiz, jobject jbitmap) {
+Java_com_sq_rknn_rknnyolov8_YoloV8Detect_detect2(JNIEnv *env, jobject thiz, jobject jbitmap) {
     AndroidBitmapInfo dstInfo;
 
     if (ANDROID_BITMAP_RESULT_SUCCESS != AndroidBitmap_getInfo(env, jbitmap, &dstInfo)) {
@@ -188,13 +188,13 @@ Java_com_sq_rknn_yolov8_YoloV8Detect_detect2(JNIEnv *env, jobject thiz, jobject 
     AndroidBitmap_unlockPixels(env, jbitmap);
 
     // 获取 Java 类和构造函数
-    jclass detectionResultClass = env->FindClass("com/sq/rknn/yolov8/DetectionResult");
-    jclass objectResultClass = env->FindClass("com/sq/rknn/yolov8/DetectionResult$ObjectResult");
+    jclass detectionResultClass = env->FindClass("com/sq/rknn/rknnyolov8/DetectionResult");
+    jclass objectResultClass = env->FindClass("com/sq/rknn/rknnyolov8/DetectionResult$ObjectResult");
 
     jmethodID detectionResultConstructor = env->GetMethodID(detectionResultClass, "<init>", "()V");
     jmethodID objectResultConstructor = env->GetMethodID(objectResultClass, "<init>", "(FFFFIF)V");
 
-    jmethodID addMethod = env->GetMethodID(detectionResultClass, "addObjectResult", "(Lcom/sq/rknn/yolov8/DetectionResult$ObjectResult;)V");
+    jmethodID addMethod = env->GetMethodID(detectionResultClass, "addObjectResult", "(Lcom/sq/rknn/rknnyolov8/DetectionResult$ObjectResult;)V");
 
     // 创建 DetectionResult 实例
     jobject detectionResult = env->NewObject(detectionResultClass, detectionResultConstructor);
@@ -212,7 +212,7 @@ Java_com_sq_rknn_yolov8_YoloV8Detect_detect2(JNIEnv *env, jobject thiz, jobject 
 }
 
 JNIEXPORT jboolean JNICALL
-Java_com_sq_rknn_yolov8_YoloV8Detect_release(JNIEnv *env, jobject thiz) {
+Java_com_sq_rknn_rknnyolov8_YoloV8Detect_release(JNIEnv *env, jobject thiz) {
     deinit_post_process();
 
     int ret = use_zero_copy ? release_yolov8_model_zerocopy(&rknn_app_ctx)
